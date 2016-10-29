@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 
-/** 
+/**
  * This is the model class for table "attendance".
  *
  * @property integer $attend_id
@@ -14,7 +14,7 @@ use Yii;
  */
 class Attendance extends \yii\db\ActiveRecord
 {
-     public $file;
+     public $file; 
     /**
      * @inheritdoc
      */
