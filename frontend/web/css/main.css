@@ -1,0 +1,4 @@
+
+@media print {
+#report {overflow: visible; height: auto;}
+}
