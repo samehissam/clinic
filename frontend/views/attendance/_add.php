@@ -17,7 +17,7 @@ use yii\helpers\Url;
 ?>
 
 
-
+ 
 <div class="attendance-form well">
 
     <?php $form = ActiveForm::begin(['options'=>['enctype'=>"multipart/form-data"]]); ?>
