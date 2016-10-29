@@ -15,7 +15,7 @@ use Yii;
  */
 class BankMovement extends \yii\db\ActiveRecord
 {
-    /**
+    /** 
      * @inheritdoc
      */
     public static function tableName()
