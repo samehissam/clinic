@@ -8,6 +8,7 @@ use frontend\models\BankMovementSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * BankMovementController implements the CRUD actions for BankMovement model.
@@ -17,17 +18,30 @@ class BankMovementController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                   'actions' => ['create', 'index', 'error','delete', 'update', 'view', 'ask','error', 'report', 'long-report'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+ }
 
     /**
      * Lists all BankMovement models.

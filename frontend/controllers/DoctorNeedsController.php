@@ -10,6 +10,8 @@ use frontend\models\DoctorNeedsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
 
 /**
  * DoctorNeedsController implements the CRUD actions for DoctorNeeds model.
@@ -19,17 +21,49 @@ class DoctorNeedsController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                 'actions' => ['create', 'index', 'error', 'update', 'view', 'remove','delete','error', 'report', 'doctor-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
+
+     public function checkPermission()
+     {
+         $userId     = Yii::$app->user->identity->id;
+         $connection = \Yii::$app->db;
+         $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+             =" . $userId)->queryAll();
+
+             //use this bettween any action you want to give to spasific person like admin
+
+
+         //   if (count($this->checkPermission()) > 0 ) { }
+         return $checkAdmin;
+     }
+
+     public function actionError()
+     {
+         return $this->render('error');
+     }
 
     /**
      * Lists all DoctorNeeds models.
@@ -48,15 +82,23 @@ class DoctorNeedsController extends Controller
 
     public function actionDoctorReport()
     {
+      if (count($this->checkPermission()) > 0 ) {
 
         $this->layout="reportLayout.php";
         return $this->render('doctor-report');
+      }else{
+         return $this->redirect(['error']);
+      }
     }
     public function actionReport()
     {
+      if (count($this->checkPermission()) > 0 ) {
 
         $this->layout="reportLayout.php";
         return $this->render('report');
+      }else{
+         return $this->redirect(['error']);
+      }
     }
     /**
      * Displays a single DoctorNeeds model.

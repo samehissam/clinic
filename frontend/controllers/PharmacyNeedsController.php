@@ -8,6 +8,8 @@ use frontend\models\PharmacyNeedsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
 
 /**
  * PharmacyNeedsController implements the CRUD actions for PharmacyNeeds model.
@@ -17,17 +19,50 @@ class PharmacyNeedsController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                  'actions' => ['create', 'index', 'error', 'update', 'view', 'remove','delete','error', 'report', 'long-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
+
+     public function checkPermission()
+     {
+         $userId     = Yii::$app->user->identity->id;
+         $connection = \Yii::$app->db;
+         $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+             =" . $userId)->queryAll();
+
+             //use this bettween any action you want to give to spasific person like admin
+
+
+         //   if (count($this->checkPermission()) > 0 ) { }
+         return $checkAdmin;
+     }
+
+     public function actionError()
+     {
+         return $this->render('error');
+     }
+
 
     /**
      * Lists all PharmacyNeeds models.
@@ -64,14 +99,18 @@ class PharmacyNeedsController extends Controller
     public function actionCreate()
     {
         $model = new PharmacyNeeds();
-
+        if (count($this->checkPermission()) > 0 ) {
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['create']);
         } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
 
     /**

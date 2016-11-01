@@ -8,6 +8,7 @@ use frontend\models\EmpPartSalarySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EmpPartSalaryController implements the CRUD actions for EmpPartSalary model.
@@ -17,17 +18,30 @@ class EmpPartSalaryController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                   'actions' => ['create', 'index', 'error','delete', 'update', 'view', 'remove','error', 'report', 'long-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
 
     /**
      * Lists all EmpPartSalary models.
@@ -55,6 +69,24 @@ class EmpPartSalaryController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    public function checkPermission()
+    {
+        $userId     = Yii::$app->user->identity->id;
+        $connection = \Yii::$app->db;
+        $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+            =" . $userId)->queryAll();
+
+            //use this bettween any action you want to give to spasific person like admin
+
+
+        //   if (count($this->checkPermission()) > 0 ) { }
+        return $checkAdmin;
+    }
+
+    public function actionError()
+    {
+        return $this->render('error');
+    }
 
     /**
      * Creates a new EmpPartSalary model.
@@ -64,6 +96,8 @@ class EmpPartSalaryController extends Controller
     public function actionCreate()
     {
         $model = new EmpPartSalary();
+        if (count($this->checkPermission()) > 0 ) {
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
           Yii::$app->getSession()->setFlash('success',
@@ -75,6 +109,11 @@ class EmpPartSalaryController extends Controller
                 'model' => $model,
             ]);
         }
+
+          }else{
+             return $this->redirect(['error']);
+          }
+
     }
 
     /**

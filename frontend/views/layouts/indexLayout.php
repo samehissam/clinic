@@ -21,7 +21,7 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <!--How to change website icon-->
-     <link rel="shortcut icon" href="/shop/frontend/web/images/cart.png">
+     <link rel="shortcut icon" href="/clinic/frontend/web/images/cart.png">
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
@@ -33,19 +33,19 @@ AppAsset::register($this);
 
 
 
- 
-       
+
+
     <div class="row">
-      	
-      		
+
+
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
             <?= Alert::widget() ?>
-            <?= $content ?>  
-        
+            <?= $content ?>
 
-         
+
+
 
     </div>
 

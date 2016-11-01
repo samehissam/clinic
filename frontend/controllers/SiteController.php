@@ -36,7 +36,7 @@ class SiteController extends Controller
                   [
                         'actions' => ['signup'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['logout'],
@@ -99,21 +99,7 @@ class SiteController extends Controller
         return $this->render('aboutus');
     }
 
-    public function GetVolumeLabel($drive) {
-        if (preg_match('#Volume Serial Number is (.*)\n#i', shell_exec('dir '.$drive.':'), $m)) {
-        $volname = ' ('.$m[1].')';
-        } else {
-        $volname = '';
-        }
-        return $volname;
-    }
-    public function checkD(){
-    $serial =trim(str_replace("(","",str_replace(")","",$this->GetVolumeLabel("c"))));
-        $connection=\Yii::$app->db;
-        $check=$connection->createCommand("SELECT id from checkout WHERE name
-            = "."'".$serial."'")->queryAll();
-        return $check;
-    }
+
 
     public function checkPermission(){
         $userId=Yii::$app->user->identity->id;
@@ -126,7 +112,10 @@ class SiteController extends Controller
 
 
 
-
+    public function actionError()
+    {
+        return $this->render('error');
+    }
     public function actionLogin()
     {
 
@@ -206,6 +195,9 @@ class SiteController extends Controller
     public function actionSignup()
     {
           $this->layout="indexLayout";
+
+          if (count($this->checkPermission()) > 0 ) {
+
       /*  $now = date('Y-m-d');
         $connection=\Yii::$app->db;
         $lastLoginDate= $connection->createCommand("SELECT login_date FROM login_session  ORDER by session_id DESC ")->queryOne();
@@ -230,6 +222,11 @@ class SiteController extends Controller
                 ]);
             }
 
+          }else{
+             return $this->redirect(['error']);
+          }
+
+
     }
 
     public function actionEntry(){
@@ -243,7 +240,9 @@ class SiteController extends Controller
         } else {
             // either the page is initially displayed or there is some validation error
             return $this->render('entry', ['model' => $model]);
-        }}
+        }
+
+      }
 
     /**
      * Requests password reset.

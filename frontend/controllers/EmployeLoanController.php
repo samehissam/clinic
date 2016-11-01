@@ -8,6 +8,7 @@ use frontend\models\EmployeLoanSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EmployeLoanController implements the CRUD actions for EmployeLoan model.
@@ -17,18 +18,30 @@ class EmployeLoanController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                   'actions' => ['create', 'index','delete', 'error', 'update', 'view', 'remove','error', 'report', 'long-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
     /**
      * Lists all EmployeLoan models.
      * @return mixed
@@ -57,6 +70,26 @@ class EmployeLoanController extends Controller
         ]);
     }
 
+
+      public function checkPermission()
+      {
+          $userId     = Yii::$app->user->identity->id;
+          $connection = \Yii::$app->db;
+          $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+              =" . $userId)->queryAll();
+
+              //use this bettween any action you want to give to spasific person like admin
+
+
+          //   if (count($this->checkPermission()) > 0 ) { }
+          return $checkAdmin;
+      }
+
+      public function actionError()
+      {
+          return $this->render('error');
+      }
+
     /**
      * Creates a new EmployeLoan model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -65,6 +98,8 @@ class EmployeLoanController extends Controller
     public function actionCreate()
     {
         $model = new EmployeLoan();
+        if (count($this->checkPermission()) > 0 ) {
+
 
         if ($model->load(Yii::$app->request->post()) ) {
 
@@ -101,6 +136,10 @@ class EmployeLoanController extends Controller
                 'model' => $model,
             ]);
         }
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
 
     /**

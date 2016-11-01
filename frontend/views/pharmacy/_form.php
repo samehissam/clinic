@@ -16,11 +16,11 @@ use yii\widgets\ActiveForm;
 
 
 
-    <div class=" inner-addon right-addon" style="margin:0 16px">
+    <div class=" inner-addon right-addon" style="margin:0 16px; width:500px; margin-right:150px;">
       <i class="glyphicon glyphicon-pencil"></i>
     <?= $form->field($model, 'pharmacy_name')->textInput(['maxlength' => true]) ?>
   </div>
-  <div class="form-group" style="margin-right:16px;">
+  <div class="form-group" style="margin-right:150px;">
     <?= Html::submitButton('<span class=" fa fa-ambulance pad"></span>إضافة الصيدلية', ['class' => 'btn btn-outline-primary']) ?>
   </div>
 

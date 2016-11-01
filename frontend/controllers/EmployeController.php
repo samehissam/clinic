@@ -9,6 +9,7 @@ use frontend\models\EmployeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EmployeController implements the CRUD actions for Employe model.
@@ -22,18 +23,31 @@ class EmployeController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                   'actions' => ['create', 'index','delete', 'error', 'update',
+                    'view', 'remove','error', 'report', 'long-report','salary-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
     /**
      * Lists all Employe models.
      * @return mixed
@@ -48,15 +62,43 @@ class EmployeController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    public function checkPermission()
+    {
+        $userId     = Yii::$app->user->identity->id;
+        $connection = \Yii::$app->db;
+        $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+            =" . $userId)->queryAll();
+
+            //use this bettween any action you want to give to spasific person like admin
+
+
+        //   if (count($this->checkPermission()) > 0 ) { }
+        return $checkAdmin;
+    }
+
+    public function actionError()
+    {
+        return $this->render('error');
+    }
     public function actionReport()
     {
+      if (count($this->checkPermission()) > 0 ) {
         $this->layout="reportLayout.php";
         return $this->render('report');
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
     public function actionSalaryReport()
     {
+      if (count($this->checkPermission()) > 0 ) {
         $this->layout="reportLayout.php";
         return $this->render('salary-report');
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
 
     /**
@@ -71,6 +113,8 @@ class EmployeController extends Controller
         ]);
     }
 
+
+
     /**
      * Creates a new Employe model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -79,14 +123,19 @@ class EmployeController extends Controller
     public function actionCreate()
     {
         $model = new Employe();
+        if (count($this->checkPermission()) > 0 ) {
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->employe_id]);
+            return $this->redirect(['create']);
         } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
 
     public function actionImportExcel(){

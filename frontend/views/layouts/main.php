@@ -52,11 +52,11 @@ AppAsset::register($this);
         'encodeLabels' => false,
         'items' => [
 
-            ['label' => ' <i class="fa fa-money" aria-hidden="true"></i>&nbsp; إضافة مصروف', 'url' => Url::to(['expenses/create'])],
-            ['label' => '<i class="fa fa-search" aria-hidden="true"></i>&nbsp; قائمة الأسعار', 'url' => ['product/show']],
+            ['label' => '<i class="fa fa-home" aria-hidden="true"></i>&nbsp; المخزن الرئيسي', 'url' => Url::to(['inventoemp'])],
 
-            ['label' => '<i class="fa fa-list" aria-hidden="true"></i>&nbsp;تقارير المصروفات', 'url' => Url::to(['expenses/ask'])],
-            ['label' => '<i class="fa fa-clinicping-cart" aria-hidden="true"></i>&nbsp; الكاشير', 'url' => ['orders/create']],
+            ['label' => '<i class="fa fa-user" aria-hidden="true"></i>&nbsp;اﻷطباء', 'url' => Url::to(['doctor/index'])],
+            ['label' => '<i class="glyphicon glyphicon-euro" aria-hidden="true"></i>&nbsp; الكشف', 'url' => Url::to(['#'])],
+            ['label' => ' <i class="fa fa-bed" aria-hidden="true"></i>&nbsp; المريض', 'url' => Url::to(['patient/create'])],
 
    Yii::$app->user->isGuest ?
     // ['label' => '<span class="glyphicon glyphicon-user"></span> التسجيل', 'url' => ['/site/signup']]:
@@ -92,11 +92,11 @@ AppAsset::register($this);
          <div class="col-md-3 col-sm-2" id="sideNav-margin">
 
 
-            <a class="list-group-item"  data-toggle="collapse" href="#collapse1"
+            <a class="list-group-item"  data-toggle="collapse" href="#emp"
             style="margin-top:20px; margin-bottom:20px;">
             <i class="glyphicon glyphicon-user" aria-hidden="true"></i> &nbsp;الموظفين</a>
 
-    <div id="collapse1" class="panel-collapse collapse">
+    <div id="emp" class="panel-collapse collapse">
       <div class="list-group">
          <a class="list-group-item" href="/clinic/frontend/web/index.php?r=employe/create"
          ><i class="glyphicon glyphicon-user"aria-hidden="true"></i> &nbsp; إضافة موظف جديد
@@ -114,11 +114,11 @@ AppAsset::register($this);
       </div>
 
     </div>
-  <a class="list-group-item"  data-toggle="collapse" href="#collapse2" style="margin-top:20px; margin-bottom:20px;">
+  <a class="list-group-item"  data-toggle="collapse" href="#inventory" style="margin-top:20px; margin-bottom:20px;">
     <i class="fa fa-home fa-fw" aria-hidden="true"></i> &nbsp;المخزن الرئيسي
   </a>
 
- <div id="collapse2" class="panel-collapse collapse">
+ <div id="inventory" class="panel-collapse collapse">
       <div class="list-group">
          <a class="list-group-item" href="/clinic/frontend/web/index.php?r=inventory/create">
            <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;تسجيل صنف جديد
@@ -138,38 +138,125 @@ AppAsset::register($this);
       </div>
 
     </div>
-        <a class="list-group-item"  data-toggle="collapse" href="#collapse3" style="margin-top:20px; margin-bottom:20px;"><i class="fa fa-clinicping-cart fa-fw" aria-hidden="true"></i> &nbsp;المبيعات</a>
 
- <div id="collapse3" class="panel-collapse collapse">
-      <div class="list-group">
-        <a class="list-group-item" href="/clinic/frontend/web/index.php?r=orders/create"><i class="fa fa-clinicping-cart fa-fw" aria-hidden="true"></i> &nbsp; الكــاشــير</a>
+    <a class="list-group-item"  data-toggle="collapse" href="#indoor" style="margin-top:20px; margin-bottom:20px;">
+      <i class="fa fa-home fa-fw" aria-hidden="true"></i> &nbsp;المخزن الداخلي
+    </a>
 
-              <a class="list-group-item" href="/clinic/frontend/web/index.php?r=orders/order-report"><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; تعديل الأوردرات </a>
+   <div id="indoor" class="panel-collapse collapse">
+        <div class="list-group">
+           <a class="list-group-item" href="/clinic/frontend/web/index.php?r=indoor-history/create">
+             <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;خروج صنف لمريض
+           </a>
 
-              <a class="list-group-item" href="/clinic/frontend/web/index.php?r=orders/ask"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; تقرير المبيعات والمكسب </a>
-
-               <a class="list-group-item" href="/clinic/frontend/web/index.php?r=orders/ask-shift"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; تقرير المبيعات للشفتات </a>
-
-
-      </div>
-
-   </div>
-
-   <a class="list-group-item"  data-toggle="collapse" href="#collapse4" style="margin-top:20px; margin-bottom:20px;"><i class="fa fa-barcode fa-fw" aria-hidden="true"></i> &nbsp;الباركود</a>
-
-    <div id="collapse4" class="panel-collapse collapse">
-      <div class="list-group">
-        <a class="list-group-item" href="/clinic/frontend/views/barcode/html/BCGean13.php"><i class="fa fa-barcode fa-fw" aria-hidden="true"></i> &nbsp;إستخراج باركود جديد</a>
-
-
-
-
-               <a class="list-group-item" href="/clinic/frontend/web/index.php?r=product/product"><i class="fa fa-list" aria-hidden="true"></i>&nbsp; عرض الأصناف للإستخراج باركود </a>
-
+            </a>
+            <a class="list-group-item" href="/clinic/frontend/web/index.php?r=indoor-history/report">
+              <i class="fa fa-bar-chart-o fa-fw" aria-hidden="true"></i>&nbsp;حركة الأصناف
+                      </a>
+        </div>
 
       </div>
+      <a class="list-group-item"  data-toggle="collapse" href="#inclub" style="margin-top:20px; margin-bottom:20px;">
+        <i class="fa fa-home fa-fw" aria-hidden="true"></i> &nbsp;مخزن الحضانة      </a>
 
-   </div>
+
+      <div id="inclub" class="panel-collapse collapse">
+           <div class="list-group">
+              <a class="list-group-item" href="/clinic/frontend/web/index.php?r=inclubation-history/create">
+                <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;خروج صنف لمريض
+              </a>
+
+               </a>
+               <a class="list-group-item" href="/clinic/frontend/web/index.php?r=inclubation-history/report">
+                 <i class="fa fa-bar-chart-o fa-fw" aria-hidden="true"></i>&nbsp;حركة الأصناف
+                         </a>
+           </div>
+
+         </div>
+      <a class="list-group-item"  data-toggle="collapse" href="#pharmacy" style="margin-top:20px; margin-bottom:20px;">
+        <i class="glyphicon glyphicon-euro" aria-hidden="true"></i> &nbsp;الصيدليات      </a>
+
+
+      <div id="pharmacy" class="panel-collapse collapse">
+           <div class="list-group">
+              <a class="list-group-item" href="/clinic/frontend/web/index.php?r=pharmacy/create">
+                <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;تسجيل اسم  صيدلية              </a>
+
+               </a>
+               <a class="list-group-item" href="/clinic/frontend/web/index.php?r=pharmacy-needs/create">
+                 <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;تسجيل مستلزمات من صيدلية
+                         </a>
+               <a class="list-group-item" href="/clinic/frontend/web/index.php?r=pharmacy/report">
+                 <i class="fa fa-bar-chart-o fa-fw" aria-hidden="true"></i>&nbsp;تقرير الصيدليات
+                         </a>
+           </div>
+
+         </div>
+
+         <a class="list-group-item"  data-toggle="collapse" href="#price" style="margin-top:20px; margin-bottom:20px;">
+           <i class="glyphicon glyphicon-euro" aria-hidden="true"></i> &nbsp;تسعير المستلزمات </a>
+
+
+         <div id="price" class="panel-collapse collapse">
+              <div class="list-group">
+                 <a class="list-group-item" href="/clinic/frontend/web/index.php?r=stock-item-price/create">
+                   <i class="glyphicon glyphicon-euro" aria-hidden="true"></i>&nbsp;تسعير للجهات</a>
+
+              </div>
+
+            </div>
+         <a class="list-group-item"  data-toggle="collapse" href="#doctor" style="margin-top:20px; margin-bottom:20px;">
+           <i class="glyphicon glyphicon-user" aria-hidden="true"></i> &nbsp;اﻷطباء </a>
+
+
+         <div id="doctor" class="panel-collapse collapse">
+              <div class="list-group">
+                 <a class="list-group-item" href="/clinic/frontend/web/index.php?r=doctor-needs/create">
+                   <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>&nbsp;تسجيل مستلزمات</a>
+
+                 <a class="list-group-item" href="/clinic/frontend/web/index.php?r=doctor-needs/doctor-report">
+                 <i class="fa fa-pencil fa-fw"  aria-hidden="true"></i>&nbsp;مستلزمات طبيب</a>
+
+                 <a class="list-group-item" href="/clinic/frontend/web/index.php?r=doctor-needs/report">
+                 <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp;جرد المستلزمات</a>
+
+              </div>
+
+            </div>
+
+            <a class="list-group-item"  data-toggle="collapse" href="#bank" style="margin-top:20px; margin-bottom:20px;">
+              <i class="fa fa-bank" aria-hidden="true"></i> &nbsp;تعاملات البنوك</a>
+
+
+            <div id="bank" class="panel-collapse collapse">
+                 <div class="list-group">
+                    <a class="list-group-item" href="/clinic/frontend/web/index.php?r=bank-movement/create">
+                         <i class="fa fa-pencil fa-fw"  aria-hidden="true"></i>&nbsp;تسجيل التعاملات</a>
+
+                    <a class="list-group-item" href="/clinic/frontend/web/index.php?r=bank-movement/report">
+                       <i class="fa fa-bar-chart-o fa-fw"  aria-hidden="true"></i>&nbsp;تقرير المعاملات</a>
+
+                 </div>
+
+               </div>
+
+            <a class="list-group-item"  data-toggle="collapse" href="#admin" style="margin-top:20px; margin-bottom:20px;">
+          <i class="glyphicon glyphicon-log-in" aria-hidden="true"></i> &nbsp;اﻷدمن</a>
+
+
+            <div id="admin" class="panel-collapse collapse">
+                 <div class="list-group">
+                    <a class="list-group-item" href="/clinic/frontend/web/index.php?r=site/signup">
+                    <i class="glyphicon glyphicon-log-in"  aria-hidden="true"></i>&nbsp;فتح حساب لموظف</a>
+
+                    <a class="list-group-item" href="/clinic/frontend/web/index.php?r=auth-assignment/create">
+                       <i class="fa fa-user  fa-fw"  aria-hidden="true"></i>&nbsp;صلاحيات الموظفين</a>
+
+                 </div>
+
+               </div>
+
+
    </div>
 
 

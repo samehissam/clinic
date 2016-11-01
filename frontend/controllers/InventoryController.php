@@ -10,6 +10,8 @@ use frontend\models\InventorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
 
 /**
  * InventoryController implements the CRUD actions for Inventory model.
@@ -19,17 +21,49 @@ class InventoryController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+     public function behaviors()
+     {
+       return [
+       'access' => [
+           'class' => AccessControl::className(),
+           //'only' => ['logout', 'signup'],
+           'rules' => [
+               [
+                   'actions' => ['create', 'index', 'error','delete', 'update', 'add','view', 'remove','error', 'report', 'long-report'],
+                   'allow'   => true,
+                    'roles'   => ['@'],
+                   'allow'   => true,
+                   'roles'   => ['@'],
+               ],
+           ],
+       ],
+       'verbs'  => [
+           'class'   => VerbFilter::className(),
+           'actions' => [
+               'delete' => ['post'],
+           ],
+       ],
+   ];
+   }
+
+     public function checkPermission()
+     {
+         $userId     = Yii::$app->user->identity->id;
+         $connection = \Yii::$app->db;
+         $checkAdmin = $connection->createCommand("SELECT item_name from auth_assignment WHERE user_id
+             =" . $userId)->queryAll();
+
+             //use this bettween any action you want to give to spasific person like admin
+
+
+         //   if (count($this->checkPermission()) > 0 ) { }
+         return $checkAdmin;
+     }
+
+     public function actionError()
+     {
+         return $this->render('error');
+     }
 
     /**
      * Lists all Inventory models.
@@ -48,7 +82,12 @@ class InventoryController extends Controller
 
     public function actionReport()
     {
+        if (count($this->checkPermission()) > 0 ) {
         return $this->render('report');
+      }else{
+         return $this->redirect(['error']);
+      }
+
     }
 
     /**
@@ -73,6 +112,7 @@ class InventoryController extends Controller
         $model = new Inventory();
 
 
+          if (count($this->checkPermission()) > 0 ) {
         if ($model->load(Yii::$app->request->post())&&$model->save()) {
             //$model->date = date('Y/m/d');
             // ;
@@ -128,6 +168,10 @@ class InventoryController extends Controller
               //  'itemPrice' => (empty($itemPrice)) ? [new StockItemPrice] : $itemPrice,
             ]);
         }
+      }else{
+         return $this->redirect(['error']);
+      }
+
 
    }
 
@@ -135,6 +179,7 @@ class InventoryController extends Controller
    {
        $model = new Inventory();
        $connection   = \Yii::$app->db;
+         if (count($this->checkPermission()) > 0 ) {
        if ($model->load(Yii::$app->request->post())) {
           $item_qty = $connection->createCommand('SELECT item_qty from inventory
             where item_id= '. $model->item_name)->queryAll();
@@ -152,6 +197,10 @@ class InventoryController extends Controller
                'model' => $model,
            ]);
        }
+     }else{
+        return $this->redirect(['error']);
+     }
+
    }
     /**
      * Updates an existing Inventory model.

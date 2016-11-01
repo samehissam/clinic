@@ -51,11 +51,11 @@ AppAsset::register($this);
         'encodeLabels' => false,
         'items' => [
 
-            ['label' => ' <i class="fa fa-money" aria-hidden="true"></i>&nbsp; إضافة مصروف', 'url' => Url::to(['expenses/create'])],
-            ['label' => '<i class="fa fa-search" aria-hidden="true"></i>&nbsp; قائمة الأسعار', 'url' => ['product/show']],
+            ['label' => '<i class="fa fa-home" aria-hidden="true"></i>&nbsp; المخزن الرئيسي', 'url' => Url::to(['inventory/report'])],
 
-            ['label' => '<i class="fa fa-list" aria-hidden="true"></i>&nbsp;تقارير المصروفات', 'url' => Url::to(['expenses/ask'])],
-            ['label' => '<i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; الكاشير', 'url' => ['orders/create']],
+            ['label' => '<i class="fa fa-user" aria-hidden="true"></i>&nbsp;اﻷطباء', 'url' => Url::to(['doctor/index'])],
+            ['label' => '<i class="glyphicon glyphicon-euro" aria-hidden="true"></i>&nbsp; الكشف', 'url' => Url::to(['#'])],
+            ['label' => ' <i class="fa fa-bed" aria-hidden="true"></i>&nbsp; المريض', 'url' => Url::to(['patient/create'])],
 
    Yii::$app->user->isGuest ?
     // ['label' => '<span class="glyphicon glyphicon-user"></span> التسجيل', 'url' => ['/site/signup']]:
@@ -68,6 +68,7 @@ AppAsset::register($this);
 
 
         ]]);
+
 
     NavBar::end();
 

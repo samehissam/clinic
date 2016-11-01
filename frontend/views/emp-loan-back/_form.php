@@ -9,7 +9,7 @@ use kartik\select2\Select2;
 /* @var $model app\models\EmployeLoan */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+ 
 <div class="employe-loan-form  panel panel-default" style="margin-top:15px;">
   <div class="panel-heading" style="margin-bottom:16px;"><h3>
     <span class=" glyphicon glyphicon-euro pad" style="    margin-top: 12px;

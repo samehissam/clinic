@@ -8,7 +8,7 @@ use frontend\models\EmpLoanBackSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 /**
  * EmpLoanBackController implements the CRUD actions for EmpLoanBack model.
  */
@@ -19,15 +19,28 @@ class EmpLoanBackController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+      return [
+      'access' => [
+          'class' => AccessControl::className(),
+          //'only' => ['logout', 'signup'],
+          'rules' => [
+              [
+                  'actions' => ['create', 'index','delete', 'error', 'update', 'view', 'remove','error', 'report', 'long-report'],
+                  'allow'   => true,
+                  'roles'   => ['@'],
+                  'allow'   => true,
+                  'roles'   => ['@'],
+              ],
+          ],
+      ],
+      'verbs'  => [
+          'class'   => VerbFilter::className(),
+          'actions' => [
+              'delete' => ['post'],
+          ],
+      ],
+  ];
+}
 
     /**
      * Lists all EmpLoanBack models.
@@ -55,6 +68,10 @@ class EmpLoanBackController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    public function actionError()
+    {
+        return $this->render('error');
+    }
 
     /**
      * Creates a new EmpLoanBack model.
@@ -64,6 +81,7 @@ class EmpLoanBackController extends Controller
     public function actionCreate()
     {
         $model = new EmpLoanBack();
+          if (count($this->checkPermission()) > 0 ) {
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
@@ -88,6 +106,9 @@ class EmpLoanBackController extends Controller
                 'model' => $model,
             ]);
         }
+      }else{
+         return $this->redirect(['error']);
+      }
     }
 
     /**
