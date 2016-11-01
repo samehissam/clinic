@@ -16,7 +16,7 @@ use yii\filters\VerbFilter;
 class AttendanceController extends Controller
 {
     /**
-     * @inheritdoc
+     * @inheritdoc 
      */
     public function behaviors()
     {
